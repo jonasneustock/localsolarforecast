@@ -6,8 +6,13 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ## [Unreleased]
 
+## [0.3.0] - 2025-10-08
+
 ### Added
 - GitHub Actions workflow to build and publish Docker images to GHCR (multi-arch, cached).
+- Background cache refresh task with configurable interval.
+- Rate limiting middleware (per-IP) and request body size limits.
+- Container hardening: non-root, read-only filesystem, no bytecode writes.
 
 ## [0.2.0] - 2025-10-08
 

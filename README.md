@@ -11,7 +11,9 @@ No affiliation with Forecast.Solar. Interface-compatible only.
 - Local timezone timestamps (default `Europe/Berlin`)
 - Response schema compatible with HA’s Forecast.Solar integration
 - Health check at `/health`
- - Prometheus metrics at `/metrics` (toggle with `METRICS_ENABLED`)
+- Prometheus metrics at `/metrics` (toggle with `METRICS_ENABLED`)
+- Redis response caching with `Cache-Control` headers
+- Rate limiting (per IP, configurable)
 
 ## Quickstart (Docker Compose)
 
@@ -46,7 +48,8 @@ Response example:
 Notes:
 - Timestamps are local time (configurable via `TZ`).
 - For P0, `/estimate` uses the clear-sky engine; weather-aware source is P1.
- - Responses are cached in Redis with `Cache-Control: public, max-age=...`.
+- Responses are cached in Redis with `Cache-Control: public, max-age=...`.
+- Container runs as non-root and with a read-only filesystem.
 
 ## Configuration
 
@@ -56,9 +59,12 @@ Environment variables (see `docker-compose.yml`):
 - `SYSTEM_LOSS` (fraction, default `0.14`)
 - `DEFAULT_RESOLUTION` (e.g., `60m`)
 - `MAX_HORIZON_DAYS` (default `6`)
- - `REDIS_URL` (default `redis://redis:6379/0`)
- - `CACHE_TTL` (seconds, default `1800`)
- - `METRICS_ENABLED` (default `true`)
+- `REDIS_URL` (default `redis://redis:6379/0`)
+- `CACHE_TTL` (seconds, default `1800`)
+- `METRICS_ENABLED` (default `true`)
+- `RATE_LIMIT_PER_MINUTE` (default `120`)
+- `REFRESH_ENABLED` (default `true`)
+- `REFRESH_INTERVAL_SECONDS` (default `300`)
 
 ## Development
 

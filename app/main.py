@@ -5,10 +5,12 @@ from app.core.config import settings
 from app.api.estimate import router as estimate_router
 from app.api.clearsky import router as clearsky_router
 from app.core.metrics import MetricsMiddleware, metrics_endpoint
+from app.core.refresh import refresher_loop
+from app.core.security import RateLimitMiddleware, BodySizeLimitMiddleware
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Local Forecast.Solar-compatible API", version="0.1.0")
+    app = FastAPI(title="Local Forecast.Solar-compatible API", version="0.3.0")
 
     # CORS: allow all by default; can be restricted via env later
     app.add_middleware(
@@ -18,6 +20,10 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # Security middleware
+    app.add_middleware(BodySizeLimitMiddleware, max_bytes=1024 * 4)
+    app.add_middleware(RateLimitMiddleware, limit_per_minute=settings.rate_limit_per_minute)
 
     if settings.metrics_enabled:
         app.add_middleware(MetricsMiddleware)
@@ -36,3 +42,8 @@ def create_app() -> FastAPI:
 
 
 app = create_app()
+
+# Start background refresher loop
+import asyncio
+
+asyncio.get_event_loop().create_task(refresher_loop())

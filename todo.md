@@ -8,11 +8,11 @@
 
 - [x] Define scope boundary (MVP = `/estimate`, `/clearsky`; P1 = `/history`, multi-plane).
 - [x] Select licenses (Apache-2.0 for our code; respect pvlib license).
-- [ ] Repo bootstrap:
-  - [ ] Create repo `solar-forecast-local`.
-  - [ ] Enable branch protection, PR checks, semantic versioning (tags).
+- [x] Repo bootstrap:
+  - [x] Create repo `solar-forecast-local`.
+  - [x] Enable branch protection, PR checks, semantic versioning (tags).
   - [x] Add GitHub Actions workflow to build/push Docker image to GHCR.
-  - [ ] Add issue templates & PR template.
+  - [x] Add issue templates & PR template.
 - [x] Decide API compatibility target (HA uses Forecast.Solar public endpoints/fields).
 - [x] Add disclaimer (no affiliation; interface-compatible only).
 
@@ -162,7 +162,7 @@ curl "http://localhost:8080/clearsky/54.32/10.12/30/0/5" | jq .
 ## P1 — Caching & scheduling
 
 - [x] Redis response cache keyed by `(lat,lon,decl,az,kwp,res,source,date_range)`.
-- [ ] Background refresh task (every N minutes).
+- [x] Background refresh task (every N minutes).
 - [x] Cache-control headers (short max-age).
 
 ---
@@ -202,9 +202,9 @@ curl "http://localhost:8080/clearsky/54.32/10.12/30/0/5" | jq .
 
 ## P1 — Security & compliance
 
-- [ ] Rate limiting (basic token bucket).
-- [ ] Input sanitization & length limits.
-- [ ] Container runs non-root; read-only FS where possible.
+- [x] Rate limiting (basic token bucket).
+- [x] Input sanitization & length limits.
+- [x] Container runs non-root; read-only FS where possible.
 
 ---
 

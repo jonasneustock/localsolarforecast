@@ -2,7 +2,7 @@ version: "3.9"
 services:
   solar-api:
     build: .
-    image: solar-forecast-local:0.1.0
+    image: solar-forecast-local:0.3.0
     container_name: solar-api
     environment:
       - TZ=${TZ:-Europe/Berlin}
@@ -13,6 +13,9 @@ services:
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
       - CACHE_TTL=${CACHE_TTL:-1800}
       - METRICS_ENABLED=${METRICS_ENABLED:-true}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-120}
+      - REFRESH_ENABLED=${REFRESH_ENABLED:-true}
+      - REFRESH_INTERVAL_SECONDS=${REFRESH_INTERVAL_SECONDS:-300}
     ports:
       - "8080:8080"
     healthcheck:
@@ -22,6 +25,9 @@ services:
       retries: 3
     depends_on:
       - redis
+    read_only: true
+    tmpfs:
+      - /tmp
 
   redis:
     image: redis:7-alpine

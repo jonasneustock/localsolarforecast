@@ -14,6 +14,9 @@ class Settings(BaseModel):
     redis_url: str = os.getenv("REDIS_URL", "redis://redis:6379/0")
     cache_ttl_seconds: int = int(os.getenv("CACHE_TTL", "1800"))  # 30 minutes
     metrics_enabled: bool = os.getenv("METRICS_ENABLED", "true").lower() == "true"
+    rate_limit_per_minute: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "120"))
+    refresh_enabled: bool = os.getenv("REFRESH_ENABLED", "true").lower() == "true"
+    refresh_interval_seconds: int = int(os.getenv("REFRESH_INTERVAL_SECONDS", "300"))
 
 
 settings = Settings()
