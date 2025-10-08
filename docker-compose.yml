@@ -10,6 +10,9 @@ services:
       - SYSTEM_LOSS=${SYSTEM_LOSS:-0.14}
       - DEFAULT_RESOLUTION=${DEFAULT_RESOLUTION:-60m}
       - MAX_HORIZON_DAYS=${MAX_HORIZON_DAYS:-6}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - CACHE_TTL=${CACHE_TTL:-1800}
+      - METRICS_ENABLED=${METRICS_ENABLED:-true}
     ports:
       - "8080:8080"
     healthcheck:

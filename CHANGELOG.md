@@ -6,6 +6,17 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-10-08
+
+### Added
+- Redis response cache with TTL and `Cache-Control` headers.
+- Prometheus `/metrics` endpoint and middleware for request latency/counts; cache hit metric.
+- Config options: `REDIS_URL`, `CACHE_TTL`, `METRICS_ENABLED`.
+- Tests for timestamp formatting (local tz), DST boundary handling, and numeric sanity (night=0, noon>morning/evening).
+
+### Changed
+- README updated with metrics and caching details.
+
 ## [0.1.0] - 2025-10-08
 
 ### Added
@@ -17,4 +28,3 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 - Dockerfile and docker-compose with Redis service.
 - `pyproject.toml`, `README.md`, `LICENSE`, and `Makefile`.
 - Basic contract tests for API shape and engine output types.
-

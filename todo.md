@@ -134,8 +134,8 @@
 
 - [x] Unit tests for schema compliance (keys, types).
 - [ ] Deterministic tests for clear-sky (fixed inputs, snapshot outputs).
-- [ ] Timestamp formatting tests (local tz, DST boundaries).
-- [ ] Numeric sanity checks (nighttime = 0; noon > morning/evening).
+- [x] Timestamp formatting tests (local tz, DST boundaries).
+- [x] Numeric sanity checks (nighttime = 0; noon > morning/evening).
 
 **Curl smoke tests**
 ```bash
@@ -160,9 +160,9 @@ curl "http://localhost:8080/clearsky/54.32/10.12/30/0/5" | jq .
 
 ## P1 — Caching & scheduling
 
-- [ ] Redis response cache keyed by `(lat,lon,decl,az,kwp,res,source,date_range)`.
+- [x] Redis response cache keyed by `(lat,lon,decl,az,kwp,res,source,date_range)`.
 - [ ] Background refresh task (every N minutes).
-- [ ] Cache-control headers (short max-age).
+- [x] Cache-control headers (short max-age).
 
 ---
 
@@ -193,8 +193,8 @@ curl "http://localhost:8080/clearsky/54.32/10.12/30/0/5" | jq .
 
 ## P1 — Observability & SRE
 
-- [ ] Structured JSON logging (request id, latency, cache hit/miss).
-- [ ] `/metrics` (Prometheus) for QPS, p95 latency, error rate, cache stats.
+- [x] Structured JSON logging (request id, latency, cache hit/miss).
+- [x] `/metrics` (Prometheus) for QPS, p95 latency, error rate, cache stats.
 - [ ] Tracing hooks (OpenTelemetry; optional).
 
 ---

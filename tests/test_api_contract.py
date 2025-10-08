@@ -34,3 +34,9 @@ def test_estimate_same_shape_as_clearsky():
     d2 = r2.json()["result"]
     assert set(d1.keys()) == set(d2.keys())
 
+
+def test_metrics_endpoint_present():
+    r = client.get("/metrics")
+    assert r.status_code == 200
+    text = r.text
+    assert "http_requests_total" in text

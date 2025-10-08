@@ -11,7 +11,9 @@ class Settings(BaseModel):
     service_name: str = "solar-forecast-local"
     http_host: str = os.getenv("HOST", "0.0.0.0")
     http_port: int = int(os.getenv("PORT", "8080"))
+    redis_url: str = os.getenv("REDIS_URL", "redis://redis:6379/0")
+    cache_ttl_seconds: int = int(os.getenv("CACHE_TTL", "1800"))  # 30 minutes
+    metrics_enabled: bool = os.getenv("METRICS_ENABLED", "true").lower() == "true"
 
 
 settings = Settings()
-
