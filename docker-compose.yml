@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  solar-api:
+    build: .
+    image: solar-forecast-local:0.1.0
+    container_name: solar-api
+    environment:
+      - TZ=${TZ:-Europe/Berlin}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - SYSTEM_LOSS=${SYSTEM_LOSS:-0.14}
+      - DEFAULT_RESOLUTION=${DEFAULT_RESOLUTION:-60m}
+      - MAX_HORIZON_DAYS=${MAX_HORIZON_DAYS:-6}
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: solar-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
