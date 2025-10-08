@@ -10,6 +10,7 @@ from app.core.config import settings
 from app.models.site import Site
 from app.util.timeindex import time_index
 from app.util.units import clamp
+from app.services.weather_open_meteo import fetch_open_meteo, cmf_factor_from_weather
 
 
 def _validate_inputs(site: Site) -> None:
@@ -73,6 +74,46 @@ def _compute_clearsky(site: Site, index: pd.DatetimeIndex) -> pd.DataFrame:
     return df
 
 
+def _compute_with_irradiance(
+    site: Site,
+    index: pd.DatetimeIndex,
+    dni: pd.Series,
+    ghi: pd.Series,
+    dhi: pd.Series,
+) -> pd.DataFrame:
+    solar_pos = pvlib.solarposition.get_solarposition(index, site.lat, site.lon)
+    poa = pvlib.irradiance.get_total_irradiance(
+        surface_tilt=site.tilt,
+        surface_azimuth=site.to_pvlib_azimuth(),
+        dni=dni,
+        ghi=ghi,
+        dhi=dhi,
+        solar_zenith=solar_pos["zenith"],
+        solar_azimuth=solar_pos["azimuth"],
+        model="haydavies",
+        albedo=0.2,
+    )
+
+    temp_air = pd.Series(20.0, index=index)
+    wind_speed = pd.Series(1.0, index=index)
+
+    temp_cell = pvlib.temperature.sapm_cell(
+        poa_global=poa["poa_global"],
+        temp_air=temp_air,
+        wind_speed=wind_speed,
+        a=-3.56,
+        b=-0.075,
+        deltaT=3,
+    )
+    pdc0 = site.kwp * 1000.0
+    gamma_pdc = -0.004
+    poa_kw = poa["poa_global"].clip(lower=0) / 1000.0
+    pdc = pdc0 * poa_kw * (1 + gamma_pdc * (temp_cell - 25.0))
+    pdc = pdc.clip(lower=0)
+    ac = (pdc * (1.0 - settings.system_loss)).clip(lower=0, upper=pdc0)
+    return pd.DataFrame({"ac": ac})
+
+
 def _serialize_timeseries(series: pd.Series) -> Dict[str, float]:
     # Format as "YYYY-MM-DD HH:MM:SS" keys in local tz
     out: Dict[str, float] = {}
@@ -124,10 +165,29 @@ def compute_forecast(
     _validate_inputs(site)
     idx = _build_index(site.resolution)
 
-    if source != "clearsky":
-        raise ValueError("Only 'clearsky' source supported in P0")
+    if source not in ("clearsky", "open-meteo"):
+        raise ValueError("Unsupported source. Use 'clearsky' or 'open-meteo'.")
 
-    df = _compute_clearsky(site, idx)
+    if source == "clearsky" or not settings.weather_enabled:
+        df = _compute_clearsky(site, idx)
+    else:
+        # Weather-aware: fetch weather and compute CMF scaling on clearsky irradiance
+        location = pvlib.location.Location(site.lat, site.lon, tz=settings.timezone)
+        cs = location.get_clearsky(idx, model="ineichen")
+        # Open-Meteo prefers date strings
+        start_date = idx[0].strftime("%Y-%m-%d")
+        end_date = idx[-1].strftime("%Y-%m-%d")
+        weather = fetch_open_meteo(site.lat, site.lon, settings.timezone, start_date, end_date)
+        factor = cmf_factor_from_weather(idx, settings.timezone, cs["ghi"], weather, settings.weather_alpha)
+        if factor is None:
+            df = _compute_clearsky(site, idx)
+        else:
+            scaled = {
+                "dni": (cs["dni"] * factor).clip(lower=0.0),
+                "ghi": (cs["ghi"] * factor).clip(lower=0.0),
+                "dhi": (cs["dhi"] * factor).clip(lower=0.0),
+            }
+            df = _compute_with_irradiance(site, idx, scaled["dni"], scaled["ghi"], scaled["dhi"])
     watts = df["ac"].round(3)
     wh_cum = _energy_wh(watts)
     wh_day = _daily_wh(watts)
@@ -137,4 +197,3 @@ def compute_forecast(
         "watt_hours": _serialize_timeseries(wh_cum),
         "watt_hours_day": {k: float(round(v, 3)) for k, v in wh_day.items()},
     }
-

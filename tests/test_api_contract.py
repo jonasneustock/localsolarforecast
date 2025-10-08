@@ -40,3 +40,11 @@ def test_metrics_endpoint_present():
     assert r.status_code == 200
     text = r.text
     assert "http_requests_total" in text
+
+
+def test_estimate_open_meteo_shape_fallback_ok():
+    # Avoid relying on network: adapter should gracefully fallback to clearsky
+    r = client.get("/estimate/54.32/10.12/30/0/5?source=open-meteo")
+    assert r.status_code == 200
+    data = r.json()
+    assert set(data["result"].keys()) == {"watts", "watt_hours", "watt_hours_day"}

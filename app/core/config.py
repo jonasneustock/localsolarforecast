@@ -17,6 +17,13 @@ class Settings(BaseModel):
     rate_limit_per_minute: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "120"))
     refresh_enabled: bool = os.getenv("REFRESH_ENABLED", "true").lower() == "true"
     refresh_interval_seconds: int = int(os.getenv("REFRESH_INTERVAL_SECONDS", "300"))
+    weather_enabled: bool = os.getenv("WEATHER_ENABLED", "true").lower() == "true"
+    weather_ttl_seconds: int = int(os.getenv("WEATHER_TTL", "1800"))
+    weather_alpha: float = float(os.getenv("WEATHER_ALPHA", "0.75"))
+    weather_timeout_seconds: float = float(os.getenv("WEATHER_TIMEOUT", "8.0"))
+    open_meteo_base_url: str = os.getenv(
+        "OPEN_METEO_BASE_URL", "https://api.open-meteo.com/v1/forecast"
+    )
 
 
 settings = Settings()

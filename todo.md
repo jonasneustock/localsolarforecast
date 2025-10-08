@@ -148,14 +148,14 @@ curl "http://localhost:8080/clearsky/54.32/10.12/30/0/5" | jq .
 
 ## P1 — Weather-aware forecast (Open-Meteo)
 
-- [ ] Weather adapter `weather_open_meteo.py`:
-  - [ ] Pull hourly cloud cover, temp, wind (and direct/global if available).
-  - [ ] Local cache TTL (e.g., 30–60 min).
-- [ ] Cloud Modification Factor (CMF) scaler:
-  - [ ] Map cloud cover → scale GHI/DNI/DHI (α configurable).
-  - [ ] Fallback to clear-sky if gaps.
-- [ ] Recompute POA & AC with weather-adjusted irradiance.
-- [ ] Add query param `?source=open-meteo|clearsky`.
+- [x] Weather adapter `weather_open_meteo.py`:
+  - [x] Pull hourly cloud cover, temp, wind (and direct/global if available).
+  - [x] Local cache TTL (e.g., 30–60 min).
+- [x] Cloud Modification Factor (CMF) scaler:
+  - [x] Map cloud cover or shortwave radiation → scale GHI/DNI/DHI (α configurable).
+  - [x] Fallback to clear-sky if gaps.
+- [x] Recompute POA & AC with weather-adjusted irradiance.
+- [x] Add query param `?source=open-meteo|clearsky`.
 
 ---
 

@@ -10,7 +10,7 @@ from app.core.security import RateLimitMiddleware, BodySizeLimitMiddleware
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Local Forecast.Solar-compatible API", version="0.3.0")
+    app = FastAPI(title="Local Forecast.Solar-compatible API", version="0.4.0")
 
     # CORS: allow all by default; can be restricted via env later
     app.add_middleware(

@@ -28,6 +28,11 @@ def estimate(
         description="Cadence, e.g. 15m, 30m, 60m",
         pattern=r"^(5|10|15|30|60)m$",
     ),
+    source: Optional[str] = Query(
+        default="clearsky",
+        description="Data source: 'clearsky' or 'open-meteo'",
+        pattern=r"^(clearsky|open-meteo)$",
+    ),
     response: Response,
 ):
     try:
@@ -39,7 +44,7 @@ def estimate(
             azimuth=azimuth,
             kwp=kwp,
             resolution=time or settings.default_resolution,
-            source="clearsky",
+            source=source or "clearsky",
         )
         cached = get_cached(key)
         if cached:
@@ -56,7 +61,7 @@ def estimate(
                     azimuth=azimuth,
                     kwp=kwp,
                     resolution=time or settings.default_resolution,
-                    source="clearsky",
+                    source=source or "clearsky",
                 ),
             )
             return ForecastResponse(result=cached, message=Message())
@@ -68,7 +73,7 @@ def estimate(
             azimuth_convention=azimuth,
             kwp=kwp,
             resolution=time,
-            source="clearsky",  # P0: estimate == clearsky
+            source=source or "clearsky",
         )
         set_cached(key, result)
         response.headers["X-Cache"] = "MISS"
@@ -83,7 +88,7 @@ def estimate(
                 azimuth=azimuth,
                 kwp=kwp,
                 resolution=time or settings.default_resolution,
-                source="clearsky",
+                source=source or "clearsky",
             ),
         )
         return ForecastResponse(result=result, message=Message())

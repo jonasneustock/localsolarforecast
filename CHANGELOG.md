@@ -6,6 +6,11 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-10-08
+
+### Added
+- Weather-aware forecasts via Open-Meteo with Redis caching and CMF scaling (fallback to clear-sky when unavailable).
+
 ## [0.3.0] - 2025-10-08
 
 ### Added

@@ -2,7 +2,7 @@ version: "3.9"
 services:
   solar-api:
     build: .
-    image: solar-forecast-local:0.3.0
+    image: solar-forecast-local:0.4.0
     container_name: solar-api
     environment:
       - TZ=${TZ:-Europe/Berlin}
@@ -16,6 +16,11 @@ services:
       - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-120}
       - REFRESH_ENABLED=${REFRESH_ENABLED:-true}
       - REFRESH_INTERVAL_SECONDS=${REFRESH_INTERVAL_SECONDS:-300}
+      - WEATHER_ENABLED=${WEATHER_ENABLED:-true}
+      - WEATHER_TTL=${WEATHER_TTL:-1800}
+      - WEATHER_ALPHA=${WEATHER_ALPHA:-0.75}
+      - WEATHER_TIMEOUT=${WEATHER_TIMEOUT:-8.0}
+      - OPEN_METEO_BASE_URL=${OPEN_METEO_BASE_URL:-https://api.open-meteo.com/v1/forecast}
     ports:
       - "8080:8080"
     healthcheck:

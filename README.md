@@ -30,7 +30,9 @@ curl "http://localhost:8080/metrics" | head -n 20
 
 Path params: `lat`, `lon`, `declination` (tilt from horizontal, deg), `azimuth` (0=South, +E, -W), `kwp` (kWp DC).
 
-Query: `time` cadence like `15m`, `30m`, `60m`.
+Query:
+- `time` cadence like `15m`, `30m`, `60m`.
+- `source` for `/estimate`: `clearsky` (default) or `open-meteo`.
 
 Response example:
 
