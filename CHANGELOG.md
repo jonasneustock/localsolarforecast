@@ -6,6 +6,9 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ## [Unreleased]
 
+### Added
+- GitHub Actions workflow to build and publish Docker images to GHCR (multi-arch, cached).
+
 ## [0.2.0] - 2025-10-08
 
 ### Added

@@ -11,6 +11,7 @@
 - [ ] Repo bootstrap:
   - [ ] Create repo `solar-forecast-local`.
   - [ ] Enable branch protection, PR checks, semantic versioning (tags).
+  - [x] Add GitHub Actions workflow to build/push Docker image to GHCR.
   - [ ] Add issue templates & PR template.
 - [x] Decide API compatibility target (HA uses Forecast.Solar public endpoints/fields).
 - [x] Add disclaimer (no affiliation; interface-compatible only).
